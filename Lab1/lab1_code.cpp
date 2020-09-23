@@ -26,19 +26,6 @@ void insertBeg(node **head,int key)
     *head=new_node;
 }
 
-void printList(node *head)
-{
-    node *curr=head;
-    node *prev=NULL;
-    node *next;
-    while(curr!=NULL)
-    {
-        cout<<curr->data<<" ";
-        next=XOR(prev,curr->npx);
-        prev=curr;
-        curr=next;
- }
-}
 
 void insertEnd(node **head,int data)
 {
@@ -63,13 +50,75 @@ void insertEnd(node **head,int data)
  }
 }
 
+node *deleteBeg(node *head)
+{
+ if(head == NULL)
+  return NULL;
+ node *temp=XOR(head->npx,NULL);
+ temp->npx=XOR(head,temp->npx);
+ free(head);
+ return temp;
+
+}
+
+node *deleteEnd(node *head)
+{
+  node *curr=head;
+  node *prev=NULL;
+  node *next=XOR(curr->npx,prev);
+  if(head == NULL)
+   return NULL;
+
+   while(next!=NULL)
+   {
+    prev=curr;
+    curr=next;
+    next=XOR(curr->npx,prev);
+   }
+   if(prev!=NULL)
+   prev->npx=XOR(prev->npx,curr);
+
+    free(curr);
+    return head;
+}
+
+void printList(node *head)
+{
+    node *curr=head;
+    node *prev=NULL;
+    node *next;
+    while(curr!=NULL)
+    {
+        cout<<curr->data<<" ";
+        next=XOR(prev,curr->npx);
+        prev=curr;
+        curr=next;
+ }
+}
+
+
 
 int main()
 {
 
 node *head=NULL;
-cout << "No. of nodes to insert at the end: ";
+
+
+cout << "Enter the no. of nodes to insert at beginning: ";
 int n;
+cin >> n;
+cout << "Enter the elements : \n";
+for (int i = 0; i < n; i++){
+    int data;
+    cin >> data;
+    insertBeg(&head, data);
+}
+cout << "Linked List: " << " ";
+printList(head);
+cout<<endl;
+
+cout << "Enter no. of nodes to insert at the end: ";
+
 cin >> n;
 cout << "Enter the elements: \n";
 for (int i = 0; i < n; i++){
@@ -81,15 +130,13 @@ cout << "Linked List: " << " ";
 printList(head);
 cout<< endl;
 
-cout << "No. of nodes to insert at beginning: ";
-cin >> n;
-cout << "Enter the elements : \n";
-for (int i = 0; i < n; i++){
-    int data;
-    cin >> data;
-    insertBeg(&head, data);
-}
-cout << "Linked List: " << " ";
-printList(head);
+cout<<"Linked list after deletion from the beginning: "<<endl;
+ head=deleteBeg(head);
+ printList(head);
+ cout<<endl;
+ cout<<"Linked list after deletion from the end: "<<endl;
+ head=deleteEnd(head);
+ printList(head);
+
 return 0;
 }
